@@ -33,7 +33,6 @@ artifacts:
   files:
     - snyk-report.json  
 #Dynamic Application Security Scan (DAST scan) using OWASP ZAP
-
      - |-
         apt-get update
         apt-get -y install wget
