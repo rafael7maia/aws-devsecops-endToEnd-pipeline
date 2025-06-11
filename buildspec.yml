@@ -20,7 +20,7 @@ phases:
       - |
         quality_status=$(curl -s -u $TOKEN: https://sonarcloud.io/api/qualitygates/project_status?projectKey=awsorganizarion | jq -r '.projectStatus.status')
         echo "SonarCloud analysis status is $quality_status"; 
-        # if [ $quality_status = "ERROR" ]; then exit 1; fi
+        if [ "$quality_status" = "ERROR" ]; then exit 1; fi  # Verifica se houve erro
 
       # Software Composition Analysis Scan (SCA scan) using Snyk
       - |
@@ -36,10 +36,9 @@ phases:
         apt-get -y install default-jdk
         wget https://github.com/zaproxy/zaproxy/releases/download/v2.16.1/ZAP_2.16.1_Linux.tar.gz
         tar -xvf ZAP_2.16.1_Linux.tar.gz
-        cd ZAP_2.16.1
+        cd ZAP_2.16.1 || exit 1  # Saia se o diretório não existir
         ./zap.sh -cmd -quickurl https://www.example.com -quickprogress -quickout ../zap_report.html 
         
 artifacts:
   files:
-   # - snyk-report.json  
     - zap_report.html  # Storing DAST Reports in S3 bucket
